@@ -753,7 +753,7 @@ pub struct Map<'a> {
 }
 
 impl<'a> Map<'a> {
-    fn new<T: serde::ser::SerializeMap>(data: T) -> Self {
+    pub fn new<T: serde::ser::SerializeMap>(data: T) -> Self {
         Map {
             data: Any::new(data),
             serialize_key: |data, v| data.view::<T>().serialize_key(v).map_err(erase),
@@ -763,6 +763,18 @@ impl<'a> Map<'a> {
             lifetime: PhantomData,
         }
     }
+
+    // /// Lol this is so unsafe, but will work m,aybe?
+    // pub fn new_satanic<T: serde::ser::SerializeMap>(data: &mut T) -> Self {
+    //     Map {
+    //         data: Any::new(data),
+    //         serialize_key: |data, v| data.view::<&mut T>().serialize_key(v).map_err(erase),
+    //         serialize_value: |data, v| data.view::<&mut T>().serialize_value(v).map_err(erase),
+    //         serialize_entry: |data, k, v| data.view::<&mut T>().serialize_entry(k, v).map_err(erase),
+    //         end: |data| data.take::<&mut T>().end().map(Ok::new).map_err(erase),
+    //         lifetime: PhantomData,
+    //     }
+    // }
 }
 
 impl<'a> SerializeMap for Map<'a> {
