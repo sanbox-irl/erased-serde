@@ -257,7 +257,7 @@ impl Out {
 
 // IMPL ERASED SERDE FOR SERDE /////////////////////////////////////////////////
 
-mod erase {
+pub mod erase {
     pub struct DeserializeSeed<D> {
         pub(crate) state: Option<D>,
     }
@@ -307,6 +307,10 @@ mod erase {
         pub(crate) state: D,
     }
     impl<D> MapAccess<D> {
+        pub fn new(state: D) -> Self {
+            Self { state }
+        }
+
         pub(crate) fn as_ref(&self) -> &D {
             &self.state
         }
